@@ -1,0 +1,14 @@
+{
+  "name": "ghscreensaver",
+  "version": "0.1.0",
+  "description": "Cyberpunk-style multi-pane dashboard with live space feeds and matrix code rain, built toward becoming a screensaver.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^33.0.0"
+  }
+}

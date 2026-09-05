@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>ghscreensaver</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="grid">
+
+  <section class="panel">
+    <header class="panel-header"><span id="sun-label">SDO / AIA 171&Aring;</span><span class="live-dot">LIVE</span></header>
+    <div class="panel-body img-body">
+      <img id="img-sun" alt="Sun 171A" />
+    </div>
+    <footer class="panel-footer" id="footer-sun">--</footer>
+  </section>
+
+  <section class="panel">
+    <header class="panel-header"><span id="earth-label">EARTH / DSCOVR EPIC</span><span class="live-dot">LIVE</span></header>
+    <div class="panel-body img-body">
+      <img id="img-earth" alt="Earth from DSCOVR" />
+    </div>
+    <footer class="panel-footer" id="footer-earth">--</footer>
+  </section>
+
+  <section class="panel">
+    <header class="panel-header"><span>GLOBAL SURFACE TEMP</span><span class="live-dot">DAILY</span></header>
+    <div class="panel-body img-body">
+      <img id="img-temp" alt="Global temperature map" />
+    </div>
+    <footer class="panel-footer" id="footer-temp">--</footer>
+  </section>
+
+  <section class="panel">
+    <header class="panel-header"><span id="mars-label">MARS / PERSEVERANCE NAVCAM</span><span class="live-dot">SOL</span></header>
+    <div class="panel-body img-body">
+      <img id="img-mars" alt="Latest Mars surface image" />
+    </div>
+    <footer class="panel-footer" id="footer-mars">--</footer>
+  </section>
+
+  <section class="panel">
+    <header class="panel-header"><span id="iss-video-label">ISS HD EARTH VIEWING</span><span class="live-dot">LIVE</span></header>
+    <div class="panel-body">
+      <iframe id="iframe-iss"
+        allow="autoplay; encrypted-media"
+        frameborder="0"></iframe>
+    </div>
+  </section>
+
+  <section class="panel">
+    <header class="panel-header"><span>SOLAR SYSTEM &middot; LOG SCALE</span><span class="live-dot">LIVE</span></header>
+    <div class="panel-body">
+      <canvas id="planets-canvas"></canvas>
+    </div>
+    <footer class="panel-footer" id="footer-planets">--</footer>
+  </section>
+
+  <section class="panel" id="pane-status">
+    <header class="panel-header"><span>SYSTEM</span><span class="live-dot">RUN</span></header>
+    <div class="panel-body status-body">
+      <div id="status-clock"></div>
+      <div id="status-lines"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <header class="panel-header"><span id="hubble-label">HUBBLE · LATEST RELEASE</span><span class="live-dot">NEW</span></header>
+    <div class="panel-body img-body">
+      <img id="img-hubble" alt="Latest Hubble or JWST release image" />
+    </div>
+    <footer class="panel-footer" id="footer-hubble">--</footer>
+  </section>
+
+</div>
+
+<script src="renderer/log.js"></script>
+<script src="renderer/feeds.js"></script>
+<script src="renderer/mars.js"></script>
+<script src="renderer/hubble.js"></script>
+<script src="renderer/iss-video.js"></script>
+<script src="renderer/solar-system.js"></script>
+<script src="renderer/status.js"></script>
+</body>
+</html>
