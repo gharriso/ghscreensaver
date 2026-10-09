@@ -1,4 +1,11 @@
 (function () {
+  // On multi-display setups the primary display's orbit-diagram panel is
+  // replaced by NASA Eyes on Asteroids instead (asteroids.js); this canvas
+  // still runs on secondary displays and in the single-display fallback.
+  const cfg = window.displayConfig;
+  const isPrimaryMultiDisplay = cfg && cfg.count > 1 && cfg.index === 0;
+  if (isPrimaryMultiDisplay) return;
+
   const canvas = document.getElementById('planets-canvas');
   const ctx = canvas.getContext('2d');
 

@@ -1,42 +1,20 @@
 (function () {
-  const SOURCES = [
-    { url: '/api/hubble-latest', label: 'HUBBLE · LATEST RELEASE' },
-    { url: '/api/jwst-latest', label: 'JWST · LATEST RELEASE' }
+  // science.nasa.gov's "Hubble" and "JWST" categories overlap (a Webb-only
+  // story can be tagged under the Hubble category and vice versa), so each
+  // source is also filtered by its own title text to avoid mislabeling and
+  // duplicate images across the two panels.
+  const SOURCES_ALL = [
+    { url: '/api/hubble-latest', label: 'HUBBLE', match: /hubble/i },
+    { url: '/api/jwst-latest', label: 'JWST', match: /webb|jwst/i }
   ];
-  let sourceIndex = 0;
+  const SOURCES = window.displayConfig
+    ? window.displayConfig.partition(SOURCES_ALL)
+    : SOURCES_ALL;
 
-  function setFooter(text) {
-    const el = document.getElementById('footer-hubble');
-    if (el) el.textContent = text;
-  }
-
-  function refresh() {
-    const source = SOURCES[sourceIndex];
-    fetch(source.url)
-      .then((r) => r.json())
-      .then((data) => {
-        const post = data && data[0];
-        if (!post || !post.featured_image_url) throw new Error('no image');
-
-        const img = document.getElementById('img-hubble');
-        const label = document.getElementById('hubble-label');
-        img.src = post.featured_image_url;
-        img.classList.add('loaded');
-        if (label) label.textContent = source.label;
-        setFooter(post.title.rendered.replace(/&#8217;/g, '’') + ' · ' + post.date.slice(0, 10));
-        if (window.appLog) window.appLog(source.label + ': "' + post.title.rendered.replace(/&#8217;/g, '’') + '"');
-      })
-      .catch(() => {
-        setFooter('feed unavailable, retrying...');
-        if (window.appLog) window.appLog(source.label + ': feed unavailable');
-      });
-  }
-
-  function cycleSource() {
-    sourceIndex = (sourceIndex + 1) % SOURCES.length;
-    refresh();
-  }
-
-  refresh();
-  setInterval(cycleSource, 30 * 1000);
+  window.startRecentImageRotator({
+    sources: SOURCES,
+    imgEl: document.getElementById('img-hubble'),
+    labelEl: document.getElementById('hubble-label'),
+    footerEl: document.getElementById('footer-hubble')
+  });
 })();

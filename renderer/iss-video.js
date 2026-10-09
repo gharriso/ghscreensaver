@@ -2,10 +2,13 @@
   const iframe = document.getElementById('iframe-iss');
   const label = document.getElementById('iss-video-label');
 
-  const STREAMS = [
+  const STREAMS_ALL = [
     { id: 'M3HKLzjvKPc', label: 'ISS HD EARTH VIEWING' },
     { id: 'awQzjn72bI0', label: 'ISS · HARMONY MODULE EXTERNAL CAM' }
   ];
+  const STREAMS = window.displayConfig
+    ? window.displayConfig.partition(STREAMS_ALL)
+    : STREAMS_ALL;
   let streamIndex = 0;
 
   function loadStream() {

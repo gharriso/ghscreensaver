@@ -118,8 +118,22 @@ html, body {
 }
 .img-body img.loaded { opacity: 1; }
 
-#img-hubble {
+#img-hubble,
+#img-jwst-primary {
   object-fit: cover;
+}
+
+#img-jwst-primary {
+  display: none;
+}
+
+#iframe-cosmic,
+#iframe-earth-eyes,
+#iframe-asteroids {
+  display: none;
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 
 .panel-body iframe {

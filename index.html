@@ -20,14 +20,16 @@
     <header class="panel-header"><span id="earth-label">EARTH / DSCOVR EPIC</span><span class="live-dot">LIVE</span></header>
     <div class="panel-body img-body">
       <img id="img-earth" alt="Earth from DSCOVR" />
+      <img id="img-jwst-primary" alt="Latest JWST release image" />
     </div>
     <footer class="panel-footer" id="footer-earth">--</footer>
   </section>
 
   <section class="panel">
-    <header class="panel-header"><span>GLOBAL SURFACE TEMP</span><span class="live-dot">DAILY</span></header>
+    <header class="panel-header"><span id="temp-label">GLOBAL SURFACE TEMP</span><span class="live-dot">DAILY</span></header>
     <div class="panel-body img-body">
       <img id="img-temp" alt="Global temperature map" />
+      <iframe id="iframe-cosmic" allow="autoplay" frameborder="0"></iframe>
     </div>
     <footer class="panel-footer" id="footer-temp">--</footer>
   </section>
@@ -50,19 +52,21 @@
   </section>
 
   <section class="panel">
-    <header class="panel-header"><span>SOLAR SYSTEM &middot; LOG SCALE</span><span class="live-dot">LIVE</span></header>
+    <header class="panel-header"><span id="planets-label">SOLAR SYSTEM &middot; LOG SCALE</span><span class="live-dot">LIVE</span></header>
     <div class="panel-body">
       <canvas id="planets-canvas"></canvas>
+      <iframe id="iframe-asteroids" allow="autoplay" frameborder="0"></iframe>
     </div>
     <footer class="panel-footer" id="footer-planets">--</footer>
   </section>
 
   <section class="panel" id="pane-status">
-    <header class="panel-header"><span>SYSTEM</span><span class="live-dot">RUN</span></header>
-    <div class="panel-body status-body">
+    <header class="panel-header"><span id="status-header-label">SYSTEM</span><span class="live-dot">RUN</span></header>
+    <div class="panel-body status-body" id="status-content">
       <div id="status-clock"></div>
       <div id="status-lines"></div>
     </div>
+    <iframe id="iframe-earth-eyes" allow="autoplay" frameborder="0"></iframe>
   </section>
 
   <section class="panel">
@@ -75,12 +79,18 @@
 
 </div>
 
+<script src="renderer/display-config.js"></script>
 <script src="renderer/log.js"></script>
 <script src="renderer/feeds.js"></script>
+<script src="renderer/cosmic.js"></script>
+<script src="renderer/earth-eyes.js"></script>
 <script src="renderer/mars.js"></script>
+<script src="renderer/recent-images.js"></script>
 <script src="renderer/hubble.js"></script>
+<script src="renderer/jwst-primary.js"></script>
 <script src="renderer/iss-video.js"></script>
 <script src="renderer/solar-system.js"></script>
+<script src="renderer/asteroids.js"></script>
 <script src="renderer/status.js"></script>
 </body>
 </html>
