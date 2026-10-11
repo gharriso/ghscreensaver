@@ -8,6 +8,7 @@ window.startRecentImageRotator = function (options) {
     labelEl,
     footerEl,
     staticLabel,
+    partitionItems = false, // split posts across displays (display-config.js)
     intervalMs = 20 * 1000,
     refreshMs = 30 * 60 * 1000
   } = options;
@@ -83,7 +84,10 @@ window.startRecentImageRotator = function (options) {
           .catch(() => [])
       )
     ).then((lists) => {
-      const combined = interleave(lists);
+      let combined = interleave(lists);
+      if (partitionItems && window.displayConfig) {
+        combined = window.displayConfig.partition(combined);
+      }
       if (!combined.length) {
         setFooter('feed unavailable, retrying...');
         return;
