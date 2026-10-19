@@ -25,8 +25,13 @@
     { code: 'HMIIC', label: 'SDO / HMI · VISIBLE LIGHT' },
     { code: 'HMIB', label: 'SDO / HMI · MAGNETOGRAM' }
   ];
-  const SUN_FILTERS = window.displayConfig
-    ? window.displayConfig.partition(SUN_FILTERS_ALL)
+  // The last display's sun panel plays SDO's 48-hour time-lapse movies
+  // instead (see refreshSunVideo); the remaining displays split the stills.
+  const cfg = window.displayConfig;
+  const sunVideoDisplay = !cfg || cfg.index === cfg.count - 1;
+  const stillDisplays = cfg ? Math.max(1, cfg.count - 1) : 1;
+  const SUN_FILTERS = cfg
+    ? SUN_FILTERS_ALL.filter((_, i) => i % stillDisplays === cfg.index % stillDisplays)
     : SUN_FILTERS_ALL;
   let sunFilterIndex = 0;
 
@@ -55,6 +60,57 @@
   function cycleSunFilter() {
     sunFilterIndex = (sunFilterIndex + 1) % SUN_FILTERS.length;
     refreshSun();
+  }
+
+  // --- Sun video: SDO's latest 48-hour movies (~21 s each, ~8000x speed),
+  // switching wavelength every few loops. The movies are regenerated a few
+  // times a day, so the URL's cache-buster changes hourly.
+  const SUN_VIDEOS = [
+    { code: '0171', label: 'SDO / AIA 171Å · CORONAL LOOPS · 48 HR' },
+    { code: '0304', label: 'SDO / AIA 304Å · PROMINENCES / ERUPTIONS · 48 HR' },
+    { code: '0131', label: 'SDO / AIA 131Å · FLARES · 48 HR' }
+  ];
+  const SUN_VIDEO_LOOPS = 3;
+  let sunVideoIndex = 0;
+  let sunVideoLoops = 0;
+
+  function refreshSunVideo() {
+    const video = document.getElementById('video-sun');
+    const label = document.getElementById('sun-label');
+    const movie = SUN_VIDEOS[sunVideoIndex];
+    const hour = Math.floor(Date.now() / (60 * 60 * 1000));
+    sunVideoLoops = 0;
+    video.src =
+      'https://sdo.gsfc.nasa.gov/assets/img/latest/mpeg/latest_1024_' +
+      movie.code + '.mp4?_=' + hour;
+    video.onloadeddata = () => {
+      if (label) label.textContent = movie.label;
+      setFooter('footer-sun', 'Last 48 hours, time-lapse · NASA SDO');
+      log('SUN VIDEO: ' + movie.label + ' loaded');
+    };
+    video.onerror = () => {
+      setFooter('footer-sun', 'video unavailable, retrying...');
+      log('SUN VIDEO: unavailable');
+      setTimeout(refreshSunVideo, 60 * 1000);
+    };
+    video.play().catch(() => {});
+  }
+
+  function startSunVideo() {
+    const img = document.getElementById('img-sun');
+    const video = document.getElementById('video-sun');
+    img.style.display = 'none';
+    video.style.display = 'block';
+    video.onended = () => {
+      sunVideoLoops += 1;
+      if (sunVideoLoops >= SUN_VIDEO_LOOPS) {
+        sunVideoIndex = (sunVideoIndex + 1) % SUN_VIDEOS.length;
+        refreshSunVideo();
+      } else {
+        video.play().catch(() => {});
+      }
+    };
+    refreshSunVideo();
   }
 
   // --- Earth, cycling between DSCOVR EPIC, GOES-19 GeoColor and moon view -
@@ -174,14 +230,17 @@
     probe.src = url;
   }
 
-  refreshSun();
-  setInterval(cycleSunFilter, 20 * 1000);
+  if (sunVideoDisplay) {
+    startSunVideo();
+  } else {
+    refreshSun();
+    setInterval(cycleSunFilter, 20 * 1000);
+  }
 
   // On multi-display setups the primary display shows the NASA Eyes cosmic
   // view instead of the temp map (cosmic.js), and the JWST recent-release
   // panel instead of Earth imagery (jwst-primary.js). Both run everywhere
   // else (secondary displays, and the single-display fallback).
-  const cfg = window.displayConfig;
   const isPrimaryMultiDisplay = cfg && cfg.count > 1 && cfg.index === 0;
   if (!isPrimaryMultiDisplay) {
     refreshEarth();
